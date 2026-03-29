@@ -806,6 +806,7 @@ function openDetail(id) {
       <h2>${r.name}${r.favourite?' ⭐':''}</h2></div>
       <div style="display:flex;gap:0.4rem;flex-shrink:0">
         <button class="btn-x" style="border:1.5px solid var(--bdr);border-radius:6px;padding:0.3rem 0.6rem;font-size:0.76rem" onclick="openEdit('${r.id}')">✏️ Editar</button>
+        <button class="btn-x" style="border:1.5px solid #E0B0A0;border-radius:6px;padding:0.3rem 0.6rem;font-size:0.76rem;color:#c0392b" onclick="deleteRecipe('${r.id}')">🗑 Eliminar</button>
         <button class="btn-x" onclick="closeDetail()">✕</button>
       </div>
     </div>
@@ -830,6 +831,21 @@ function openDetail(id) {
   document.getElementById('detailOv').classList.add('open');
 }
 function closeDetail() { document.getElementById('detailOv').classList.remove('open'); }
+
+async function deleteRecipe(id) {
+  var r = recipes.find(function(x) { return String(x.id) === String(id); });
+  if (!r) return;
+  if (!confirm('¿Eliminar "' + r.name + '"? Esta acción no se puede deshacer.')) return;
+  recipes = recipes.filter(function(x) { return String(x.id) !== String(id); });
+  closeDetail();
+  var ok = await saveToCloud();
+  if (ok) {
+    showToast('🗑 Receta eliminada');
+    populateFilters();
+    filterAndRender();
+    updateBadge();
+  }
+}
 
 // ─── ADD / EDIT ──────────────────────────────────────
 function openAdd() {
@@ -1123,9 +1139,7 @@ async function aiCallClaudeImg(prompt, b64, mtype) {
 }
 
 function aiJsonPrompt(context) {
-  return context + '\n\nDevuelve SOLO JSON válido, sin markdown, con esta estructura exacta:\n' +
-    '{"name":"","emoji":"","categories":[],"collections":[],"servings":"","prepTime":"","cookTime":"","ingredients":"línea1\\nlínea2","steps":"paso1\\npaso2","notes":"","source":"","imageUrl":""}\n' +
-    'prepTime y cookTime: solo número en minutos. ingredients y steps: separados por \\n. imageUrl: URL absoluta de la foto principal si existe.';
+  return context + '\n\n' + aiJsonPromptRaw();
 }
 
 function aiParseJSON(text, src) {
@@ -1147,9 +1161,68 @@ function aiParseJSON(text, src) {
 }
 
 async function aiExtractUrl(url) {
-  var prompt = aiJsonPrompt('Accede a esta URL y extrae la receta completa: ' + url + '\nsource debe ser: ' + url);
-  var text = await aiCallClaude(prompt, true);
-  return aiParseJSON(text, url);
+  // Step 1: fetch the page HTML via Claude web_fetch tool
+  var fetchPrompt = 'Usa web_fetch para obtener el contenido de esta URL: ' + url + '\n\n' +
+    'Luego extrae la receta completa del contenido obtenido. ' +
+    'Busca primero datos estructurados JSON-LD (script type application/ld+json con @type Recipe). ' +
+    'Si no hay JSON-LD, extrae del HTML. ' +
+    'source debe ser: ' + url + '\n\n' +
+    aiJsonPromptRaw();
+  var text = await aiCallClaudeWithFetch(url, fetchPrompt);
+  var recipe = aiParseJSON(text, url);
+  if (recipe) return recipe;
+
+  // Step 2 fallback: ask Claude directly with the URL and web search
+  var prompt2 = aiJsonPrompt('Busca y extrae la receta de esta URL: ' + url + '. source: ' + url);
+  var text2 = await aiCallClaude(prompt2, false);
+  return aiParseJSON(text2, url);
+}
+
+async function aiCallClaudeWithFetch(url, prompt) {
+  // Use web_search tool to fetch the URL content
+  var res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+      tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  var data = await res.json();
+  // Collect all text blocks (Claude may produce multiple after tool use)
+  var texts = (data.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; });
+  if (texts.length > 0) return texts.join('');
+
+  // If stopped for tool_use, do a second turn with the tool results
+  if (data.stop_reason === 'tool_use') {
+    var toolUseBlocks = (data.content || []).filter(function(b) { return b.type === 'tool_use'; });
+    if (toolUseBlocks.length === 0) return '';
+    // Build tool results (empty — let Claude synthesize from search)
+    var toolResults = toolUseBlocks.map(function(b) {
+      return { type: 'tool_result', tool_use_id: b.id, content: 'Por favor extrae la receta de la URL buscada y devuelve el JSON.' };
+    });
+    var res2 = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514', max_tokens: 2000,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [
+          { role: 'user', content: prompt },
+          { role: 'assistant', content: data.content },
+          { role: 'user', content: toolResults }
+        ]
+      })
+    });
+    var data2 = await res2.json();
+    return (data2.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; }).join('');
+  }
+  return '';
+}
+
+function aiJsonPromptRaw() {
+  return 'Devuelve SOLO JSON válido, sin markdown, con esta estructura exacta:\n' +
+    '{"name":"","emoji":"","categories":[],"collections":[],"servings":"","prepTime":"","cookTime":"","ingredients":"linea1\\nlinea2","steps":"paso1\\npaso2","notes":"","source":"","imageUrl":""}\n' +
+    'prepTime y cookTime: solo número en minutos. ingredients y steps: uno por linea separados por \\n. imageUrl: URL absoluta de la foto principal.';
 }
 
 async function aiExtractImg(dataUrl) {
@@ -1162,7 +1235,9 @@ async function aiExtractImg(dataUrl) {
 }
 
 async function aiExtractText(txt) {
-  var prompt = aiJsonPrompt('Extrae la receta de este texto (puede venir de un reel de Instagram/TikTok con emojis y formato informal):\n---\n' + txt + '\n---\nsource: "Instagram/TikTok"');
+  var prompt = 'Extrae la receta de este texto. Puede venir de un reel de Instagram/TikTok con emojis y formato informal.\n' +
+    '---\n' + txt + '\n---\n' +
+    'source: "Instagram/TikTok"\n\n' + aiJsonPromptRaw();
   var text = await aiCallClaude(prompt, false);
   return aiParseJSON(text, 'Texto');
 }
