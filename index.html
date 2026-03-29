@@ -257,7 +257,7 @@ textarea{resize:vertical;min-height:80px}
     <button class="nb active" id="nav-buscar" onclick="showView('buscar',this)">🔍 Ingredientes</button>
     <button class="nb" id="nav-recetas" onclick="showView('recetas',this)">📖 Recetas <span class="cbadge" id="cBadge">0</span></button>
     <button class="nb" id="nav-importar" onclick="showView('importar',this)">📥 Importar</button>
-    <button class="nb" id="nav-ai" onclick="showView('ai',this)">&#10024; Por IA</button>
+    <button class="nb" id="nav-ai" onclick="showView('ai',this)">&#128279; Importar</button>
     <span class="sync-dot" id="syncDot" title="Estado de sincronización"></span>
   </nav>
 </header>
@@ -278,7 +278,7 @@ textarea{resize:vertical;min-height:80px}
     </div>
     <div id="searchResults" style="display:none">
       <div class="ai-box">
-        <div class="ai-hdr"><h3>Sugerencias de la IA</h3><span class="ai-badge">IA</span></div>
+        <div class="ai-hdr"><h3>Más ideas del recetario</h3></div>
         <div id="aiContent"><div class="ai-loading"><div class="spinner"></div> Consultando…</div></div>
       </div>
       <h3 id="matchTitle" style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:1rem"></h3>
@@ -336,7 +336,7 @@ textarea{resize:vertical;min-height:80px}
 
   <!-- AI IMPORT VIEW -->
   <div id="view-ai" class="view">
-    <p style="font-family:'Playfair Display',serif;font-size:1.7rem;margin-bottom:0.3rem">&#10024; A&ntilde;adir recetas con IA</p>
+    <p style="font-family:'Playfair Display',serif;font-size:1.7rem;margin-bottom:0.3rem">&#128279; A&ntilde;adir recetas desde URL o texto</p>
     <p style="color:var(--inks);font-size:0.87rem;margin-bottom:1.5rem">Pega URLs de webs de recetas, sube fotos de libros o pega texto de un reel &mdash; la IA extrae todo autom&aacute;ticamente.</p>
 
     <div class="ai-grid">
@@ -380,7 +380,7 @@ textarea{resize:vertical;min-height:80px}
     </div>
 
     <button class="btn-p" id="aiBtnProcess" onclick="aiProcess()" style="display:none;padding:0.85rem 2rem;font-size:0.95rem;margin-bottom:2rem">
-      &#10024; Procesar con IA
+      &#128269; Extraer recetas
     </button>
 
     <div id="aiPreviewSection" style="display:none">
@@ -657,26 +657,32 @@ async function doSearch() {
 }
 
 async function askAI() {
-  const prompt = `El usuario ${userName||'de la familia'} tiene estos ingredientes: ${ings.join(', ')}.
-El recetario familiar tiene ${recipes.length} recetas (de cocina española, mediterránea, asiática y más).
-Sugiere 3 recetas concretas que se puedan preparar con esos ingredientes (pueden necesitar básicos como sal, aceite, agua). Para cada una indica:
-- Nombre con emoji
-- Ingredientes de la lista que usa  
-- Tiempo aproximado
-- Un consejo breve
-Responde en español, formato visual con emojis.`;
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:900,
-        messages:[{role:'user',content:prompt}] })
+  // Local suggestions based on partial matches (top 3 not already shown)
+  var shown = new Set(scored.slice(0,20).map(function(x){return x.r.id;}));
+  var extras = recipes.filter(function(r) { return !shown.has(r.id); })
+    .map(function(r) {
+      var ingText = r.ingredients.toLowerCase();
+      var hits = ings.filter(function(i){ return ingText.includes(i); });
+      return { r:r, hits:hits };
+    })
+    .filter(function(x){ return x.hits.length > 0; })
+    .sort(function(a,b){ return b.hits.length - a.hits.length; })
+    .slice(0,3);
+
+  var html = '';
+  if (extras.length > 0) {
+    html = '<div class="ai-content"><strong>Otras ideas del recetario:</strong><br><br>';
+    extras.forEach(function(x) {
+      var tt = totalTime(x.r);
+      html += (x.r.emoji||'🍽️') + ' <strong>' + x.r.name + '</strong>';
+      if (tt) html += ' · ⏱ ' + tt + 'min';
+      html += '<br>Usa: ' + x.hits.join(', ') + '<br><br>';
     });
-    const data = await res.json();
-    const txt = data.content?.find(b=>b.type==='text')?.text || 'Sin respuesta.';
-    document.getElementById('aiContent').innerHTML = `<div class="ai-content">${esc(txt)}</div>`;
-  } catch {
-    document.getElementById('aiContent').innerHTML = `<div class="ai-content" style="color:#8A6A5A">⚠️ No se pudo conectar con la IA.</div>`;
+    html += '</div>';
+  } else {
+    html = '<div class="ai-content" style="color:#9A8A78">No hay más coincidencias en el recetario para estos ingredientes.</div>';
   }
+  document.getElementById('aiContent').innerHTML = html;
 }
 
 // ─── RECIPE LIST ─────────────────────────────────────
@@ -1063,6 +1069,7 @@ function aiRenderQueue() {
     row.innerHTML = '<span style="font-size:1rem">' + (icons[item.type] || '📄') + '</span>' +
       '<span class="qi-lbl" title="' + item.label + '">' + item.label.substring(0, 60) + '</span>' +
       '<span class="qi-st ' + item.status + '">' + (stLabels[item.status] || item.status) + '</span>' +
+      (item.errorMsg ? '<span style="font-size:0.72rem;color:#E07070;margin-left:0.3rem">' + item.errorMsg + '</span>' : '') +
       (item.status === 'pending' ? '<button onclick="aiRemove(' + i + ')" style="background:none;border:none;color:#6A5A4A;cursor:pointer">✕</button>' : '');
     list.appendChild(row);
   });
@@ -1095,8 +1102,24 @@ async function aiProcess() {
       if (item.type === 'url') recipe = await aiExtractUrl(item.data);
       else if (item.type === 'image') recipe = await aiExtractImg(item.data);
       else if (item.type === 'text') recipe = await aiExtractText(item.data);
-      if (recipe) { item.status = 'done'; aiPreviews.push(recipe); aiSelected.add(aiPreviews.length - 1); }
-      else item.status = 'error';
+      if (recipe && recipe._error) {
+        item.status = 'error';
+        item.errorMsg = recipe._error;
+      } else if (recipe && recipe._noSchema) {
+        // Partial result — open for manual completion
+        item.status = 'done';
+        recipe.id = 'url_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+        recipe.emoji = '🍽️'; recipe.categories = []; recipe.collections = [];
+        recipe.ingredients = ''; recipe.steps = ''; recipe.notes = recipe._message || '';
+        recipe.favourite = false; recipe.rating = 0; recipe.addedBy = userName;
+        delete recipe._noSchema; delete recipe._message;
+        aiPreviews.push(recipe); aiSelected.add(aiPreviews.length - 1);
+      } else if (recipe) {
+        item.status = 'done'; aiPreviews.push(recipe); aiSelected.add(aiPreviews.length - 1);
+      } else {
+        item.status = 'error';
+        item.errorMsg = 'No se encontró receta. Prueba pegando el texto.';
+      }
     } catch(e) { console.error(e); item.status = 'error'; }
     aiRenderQueue();
   }
@@ -1111,36 +1134,7 @@ async function aiProcess() {
   }
 }
 
-// ── Claude API calls ───────────────────────────
-async function aiCallClaude(prompt, useSearch) {
-  var body = { model: 'claude-sonnet-4-20250514', max_tokens: 2000,
-    messages: [{ role: 'user', content: prompt }] };
-  if (useSearch) body.tools = [{ type: 'web_search_20250305', name: 'web_search' }];
-  var res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
-  });
-  var data = await res.json();
-  return (data.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; }).join('');
-}
-
-async function aiCallClaudeImg(prompt, b64, mtype) {
-  var res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 2000,
-      messages: [{ role: 'user', content: [
-        { type: 'image', source: { type: 'base64', media_type: mtype, data: b64 } },
-        { type: 'text', text: prompt }
-      ]}]
-    })
-  });
-  var data = await res.json();
-  var block = (data.content || []).find(function(b) { return b.type === 'text'; });
-  return block ? block.text : '';
-}
-
-function aiJsonPrompt(context) {
-  return context + '\n\n' + aiJsonPromptRaw();
-}
+// AI API calls removed — using schema.org parser instead
 
 function aiParseJSON(text, src) {
   if (!text) return null;
@@ -1160,86 +1154,179 @@ function aiParseJSON(text, src) {
   } catch(e) { console.error('Parse error', e, text.substring(0, 200)); return null; }
 }
 
-async function aiExtractUrl(url) {
-  // Step 1: fetch the page HTML via Claude web_fetch tool
-  var fetchPrompt = 'Usa web_fetch para obtener el contenido de esta URL: ' + url + '\n\n' +
-    'Luego extrae la receta completa del contenido obtenido. ' +
-    'Busca primero datos estructurados JSON-LD (script type application/ld+json con @type Recipe). ' +
-    'Si no hay JSON-LD, extrae del HTML. ' +
-    'source debe ser: ' + url + '\n\n' +
-    aiJsonPromptRaw();
-  var text = await aiCallClaudeWithFetch(url, fetchPrompt);
-  var recipe = aiParseJSON(text, url);
-  if (recipe) return recipe;
-
-  // Step 2 fallback: ask Claude directly with the URL and web search
-  var prompt2 = aiJsonPrompt('Busca y extrae la receta de esta URL: ' + url + '. source: ' + url);
-  var text2 = await aiCallClaude(prompt2, false);
-  return aiParseJSON(text2, url);
-}
-
-async function aiCallClaudeWithFetch(url, prompt) {
-  // Use web_search tool to fetch the URL content
-  var res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514', max_tokens: 4000,
-      tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-      messages: [{ role: 'user', content: prompt }]
-    })
-  });
-  var data = await res.json();
-  // Collect all text blocks (Claude may produce multiple after tool use)
-  var texts = (data.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; });
-  if (texts.length > 0) return texts.join('');
-
-  // If stopped for tool_use, do a second turn with the tool results
-  if (data.stop_reason === 'tool_use') {
-    var toolUseBlocks = (data.content || []).filter(function(b) { return b.type === 'tool_use'; });
-    if (toolUseBlocks.length === 0) return '';
-    // Build tool results (empty — let Claude synthesize from search)
-    var toolResults = toolUseBlocks.map(function(b) {
-      return { type: 'tool_result', tool_use_id: b.id, content: 'Por favor extrae la receta de la URL buscada y devuelve el JSON.' };
-    });
-    var res2 = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514', max_tokens: 2000,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-        messages: [
-          { role: 'user', content: prompt },
-          { role: 'assistant', content: data.content },
-          { role: 'user', content: toolResults }
-        ]
-      })
-    });
-    var data2 = await res2.json();
-    return (data2.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; }).join('');
+// ── Fetch HTML via CORS proxy ──────────────────
+async function fetchHtml(url) {
+  var proxies = [
+    'https://api.allorigins.win/get?url=' + encodeURIComponent(url),
+    'https://corsproxy.io/?' + encodeURIComponent(url)
+  ];
+  for (var i = 0; i < proxies.length; i++) {
+    try {
+      var res = await fetch(proxies[i]);
+      if (!res.ok) continue;
+      var data = await res.json();
+      // allorigins wraps in {contents:...}, corsproxy returns raw
+      return data.contents || data;
+    } catch(e) { continue; }
   }
-  return '';
+  return null;
 }
 
-function aiJsonPromptRaw() {
-  return 'Devuelve SOLO JSON válido, sin markdown, con esta estructura exacta:\n' +
-    '{"name":"","emoji":"","categories":[],"collections":[],"servings":"","prepTime":"","cookTime":"","ingredients":"linea1\\nlinea2","steps":"paso1\\npaso2","notes":"","source":"","imageUrl":""}\n' +
-    'prepTime y cookTime: solo número en minutos. ingredients y steps: uno por linea separados por \\n. imageUrl: URL absoluta de la foto principal.';
+// ── Parse ISO 8601 duration to minutes ─────────
+function parseDuration(iso) {
+  if (!iso) return '';
+  var m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!m) return '';
+  var total = (parseInt(m[1]||0)*60) + parseInt(m[2]||0);
+  return total ? String(total) : '';
+}
+
+// ── Extract Recipe from JSON-LD ────────────────
+function parseSchemaRecipe(obj, url) {
+  // Handle @graph arrays
+  if (obj['@graph']) {
+    var found = null;
+    obj['@graph'].forEach(function(item) {
+      if (!found && item['@type'] && String(item['@type']).indexOf('Recipe') !== -1) found = item;
+    });
+    if (found) obj = found;
+  }
+  if (!obj['@type'] || String(obj['@type']).indexOf('Recipe') === -1) return null;
+
+  // Ingredients
+  var ings = obj.recipeIngredient || [];
+  var ingStr = ings.join('\n');
+
+  // Steps
+  var stepsRaw = obj.recipeInstructions || [];
+  var stepsArr = [];
+  if (typeof stepsRaw === 'string') {
+    stepsArr = stepsRaw.split('\n').filter(Boolean);
+  } else if (Array.isArray(stepsRaw)) {
+    stepsRaw.forEach(function(s) {
+      if (typeof s === 'string') stepsArr.push(s);
+      else if (s.text) stepsArr.push(s.text);
+      else if (s.itemListElement) {
+        s.itemListElement.forEach(function(el) { if (el.text) stepsArr.push(el.text); });
+      }
+    });
+  }
+
+  // Image
+  var img = obj.image || '';
+  if (Array.isArray(img)) img = img[0] || '';
+  if (typeof img === 'object') img = img.url || '';
+
+  // Category
+  var cat = obj.recipeCategory || '';
+  if (Array.isArray(cat)) cat = cat[0] || '';
+
+  // Cuisine
+  var cuisine = obj.recipeCuisine || '';
+  if (Array.isArray(cuisine)) cuisine = cuisine[0] || '';
+
+  var cats = [];
+  if (cat) cats.push(cat);
+  if (cuisine) cats.push(cuisine);
+
+  var name = obj.name || '';
+  var result = {
+    name: name,
+    emoji: guessEmoji(cats, [], '', name, ingStr),
+    categories: cats,
+    collections: [],
+    servings: String(obj.recipeYield || obj.yield || ''),
+    prepTime: parseDuration(obj.prepTime),
+    cookTime: parseDuration(obj.cookTime),
+    ingredients: ingStr,
+    steps: stepsArr.join('\n'),
+    notes: obj.description || '',
+    source: url,
+    imageUrl: typeof img === 'string' ? img : '',
+    favourite: false,
+    rating: obj.aggregateRating ? Math.round(parseFloat(obj.aggregateRating.ratingValue||0)) : 0,
+    addedBy: userName,
+    id: 'url_' + Date.now() + '_' + Math.random().toString(36).slice(2)
+  };
+  return result.name ? result : null;
+}
+
+// ── Extract from URL (no AI needed) ───────────
+async function aiExtractUrl(url) {
+  var html = await fetchHtml(url);
+  if (!html) return { _error: 'No se pudo acceder a la URL. Comprueba que sea pública.' };
+
+  // Find all JSON-LD script blocks
+  var jsonldRe = /<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+  var match;
+  while ((match = jsonldRe.exec(html)) !== null) {
+    try {
+      var obj = JSON.parse(match[1].trim());
+      // Could be array
+      var items = Array.isArray(obj) ? obj : [obj];
+      for (var i = 0; i < items.length; i++) {
+        var recipe = parseSchemaRecipe(items[i], url);
+        if (recipe) return recipe;
+      }
+    } catch(e) { continue; }
+  }
+
+  // Fallback: try to find recipe name from title and og:image at minimum
+  var titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+  var imgMatch = html.match(/og:image[^>]+content=["']([^"']+)["']/i) ||
+                 html.match(/content=["']([^"']+)["'][^>]+og:image/i);
+  if (titleMatch) {
+    return {
+      _noSchema: true,
+      name: titleMatch[1].replace(/\s*[-|].*$/, '').trim(),
+      imageUrl: imgMatch ? imgMatch[1] : '',
+      source: url,
+      _message: 'Esta web no tiene datos estructurados. Revisa y completa la receta manualmente.'
+    };
+  }
+  return null;
+}
+
+// ── Extract from text (paste) ──────────────────
+async function aiExtractText(txt) {
+  // Simple heuristic parser — no AI needed for structured text
+  var lines = txt.split('\n').map(function(l) { return l.trim(); }).filter(Boolean);
+  var name = '', ings = [], steps = [], inIngs = false, inSteps = false;
+
+  // First non-empty line or line with caps as name
+  for (var i = 0; i < lines.length; i++) {
+    if (lines[i].length > 3 && lines[i].length < 100) { name = lines[i].replace(/^[#*\-•]+\s*/, ''); break; }
+  }
+
+  lines.forEach(function(line) {
+    var low = line.toLowerCase();
+    if (/ingrediente|ingredient/.test(low)) { inIngs = true; inSteps = false; return; }
+    if (/preparaci|instruc|elaboraci|paso|direcci|method|steps/.test(low)) { inIngs = false; inSteps = true; return; }
+    var clean = line.replace(/^[\d\.\-\*\•]+\s*/, '').trim();
+    if (!clean || clean.length < 2) return;
+    if (inIngs) ings.push(clean);
+    else if (inSteps) steps.push(clean);
+    else if (ings.length === 0 && /\d/.test(line) && line.length < 80) ings.push(clean);
+  });
+
+  if (!name) return null;
+  return {
+    name: name,
+    emoji: guessEmoji([], [], '', name, ings.join(' ')),
+    categories: [], collections: [],
+    servings: '', prepTime: '', cookTime: '',
+    ingredients: ings.join('\n'),
+    steps: steps.join('\n'),
+    notes: '', source: 'Texto pegado',
+    imageUrl: '', favourite: false, rating: 0,
+    addedBy: userName,
+    id: 'txt_' + Date.now() + '_' + Math.random().toString(36).slice(2)
+  };
 }
 
 async function aiExtractImg(dataUrl) {
-  var parts = dataUrl.split(',');
-  var mtype = parts[0].split(':')[1].split(';')[0];
-  var b64 = parts[1];
-  var prompt = aiJsonPrompt('Analiza esta imagen y extrae la receta que contiene (puede ser de libro, cuaderno o captura de redes sociales). source: "Foto"');
-  var text = await aiCallClaudeImg(prompt, b64, mtype);
-  return aiParseJSON(text, 'Foto');
-}
-
-async function aiExtractText(txt) {
-  var prompt = 'Extrae la receta de este texto. Puede venir de un reel de Instagram/TikTok con emojis y formato informal.\n' +
-    '---\n' + txt + '\n---\n' +
-    'source: "Instagram/TikTok"\n\n' + aiJsonPromptRaw();
-  var text = await aiCallClaude(prompt, false);
-  return aiParseJSON(text, 'Texto');
+  // Without AI, tell user we can't process images
+  return { _error: 'La extracción de imágenes requiere IA. Copia el texto de la receta y pégalo en la sección de texto.' };
 }
 
 // ── Preview render ─────────────────────────────
