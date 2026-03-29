@@ -228,6 +228,9 @@ textarea{resize:vertical;min-height:80px}
   .nb{padding:0.35rem 0.6rem;font-size:0.75rem}
 }
 </style>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -441,37 +444,92 @@ let recipes  = [];
 let userName = localStorage.getItem(USER_KEY) || '';
 let editingId = null;
 
-// ─── STORAGE LAYER: Claude cloud OR localStorage fallback ──────────────────
-const HAS_CLOUD = (function() {
-  try { return typeof window.storage !== 'undefined' && window.storage !== null; }
-  catch(e) { return false; }
-})();
+// ─── FIREBASE STORAGE LAYER ────────────────────────────────────────────────
+// Firebase loaded via CDN in <head>
+var firebaseDB = null;
+var firebaseRef = null;
+var firebaseReady = false;
 
-async function storageGet(key) {
-  if (HAS_CLOUD) {
-    try { const r = await window.storage.get(key, true); return r ? r.value : null; }
-    catch(e) { return null; }
+function initFirebase() {
+  try {
+    var cfg = {
+      apiKey: "AIzaSyD2o8E2lhPAj_32I5FMxgqnCvg0SCcUhxg",
+      authDomain: "recetario-familiar-c5a54.firebaseapp.com",
+      databaseURL: "https://recetario-familiar-c5a54-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "recetario-familiar-c5a54",
+      storageBucket: "recetario-familiar-c5a54.firebasestorage.app",
+      messagingSenderId: "213983988972",
+      appId: "1:213983988972:web:58cfe2d1e29a000f4029c9"
+    };
+    firebase.initializeApp(cfg);
+    firebaseDB = firebase.database();
+    firebaseRef = firebaseDB.ref('recetario/recipes');
+    firebaseReady = true;
+  } catch(e) {
+    console.warn('Firebase init failed, using localStorage:', e);
+    firebaseReady = false;
   }
-  return localStorage.getItem(key);
 }
 
-async function storageSet(key, value) {
-  if (HAS_CLOUD) {
-    try { await window.storage.set(key, value, true); return true; }
-    catch(e) { return false; }
+async function storageGet() {
+  if (firebaseReady) {
+    return new Promise(function(resolve) {
+      firebaseRef.once('value', function(snap) {
+        var val = snap.val();
+        resolve(val ? JSON.stringify(val) : null);
+      }, function(err) {
+        console.warn('Firebase read error:', err);
+        resolve(localStorage.getItem(STORE_KEY));
+      });
+    });
   }
-  try { localStorage.setItem(key, value); return true; }
-  catch(e) { return false; }
+  return Promise.resolve(localStorage.getItem(STORE_KEY));
+}
+
+async function storageSet(value) {
+  if (firebaseReady) {
+    return new Promise(function(resolve) {
+      var data = JSON.parse(value);
+      firebaseRef.set(data, function(err) {
+        if (err) {
+          console.warn('Firebase write error:', err);
+          localStorage.setItem(STORE_KEY, value);
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      });
+    });
+  }
+  try { localStorage.setItem(STORE_KEY, value); return Promise.resolve(true); }
+  catch(e) { return Promise.resolve(false); }
+}
+
+function subscribeToChanges() {
+  if (!firebaseReady) return;
+  firebaseRef.on('value', function(snap) {
+    var val = snap.val();
+    if (!val) return;
+    var remote = Array.isArray(val) ? val : Object.values(val);
+    if (remote.length !== recipes.length) {
+      recipes = remote;
+      updateBadge(); populateFilters(); filterAndRender();
+      document.getElementById('totalCount').textContent = recipes.length;
+      showToast('\uD83D\uDD04 Recetario actualizado');
+    }
+  });
 }
 
 // ─── INIT ───────────────────────────────────────────
 async function init() {
-  setLoad(20, HAS_CLOUD ? 'Conectando al almacén compartido…' : 'Cargando recetas…');
+  initFirebase();
+  setLoad(20, firebaseReady ? 'Conectando a Firebase…' : 'Cargando recetas…');
 
-  const stored = await storageGet(STORE_KEY);
+  const stored = await storageGet();
   if (stored) {
     try {
-      recipes = JSON.parse(stored);
+      var parsed = JSON.parse(stored);
+      recipes = Array.isArray(parsed) ? parsed : Object.values(parsed);
       setLoad(70, recipes.length + ' recetas cargadas…');
     } catch(e) { recipes = []; }
   }
@@ -504,34 +562,20 @@ function finishInit() {
   filterAndRender();
   document.getElementById('totalCount').textContent = recipes.length;
   setSyncDot('ok');
+  subscribeToChanges();
 }
 
 // ─── CLOUD SAVE ─────────────────────────────────────
 async function saveToCloud() {
   setSyncDot('syncing');
-  const ok = await storageSet(STORE_KEY, JSON.stringify(recipes));
+  var ok = await storageSet(JSON.stringify(recipes));
   if (ok) { setSyncDot('ok'); return true; }
   setSyncDot('err');
   showToast('⚠️ Error al guardar');
   return false;
 }
 
-// ─── SYNC: poll every 30s (cloud only) ──────────────
-if (HAS_CLOUD) {
-  setInterval(async function() {
-    try {
-      const stored = await storageGet(STORE_KEY);
-      if (!stored) return;
-      const remote = JSON.parse(stored);
-      if (remote.length !== recipes.length) {
-        recipes = remote;
-        updateBadge(); populateFilters(); filterAndRender();
-        document.getElementById('totalCount').textContent = recipes.length;
-        showToast('🔄 Recetario actualizado');
-      }
-    } catch(e) {}
-  }, 30000);
-}
+// Firebase handles real-time sync via subscribeToChanges()
 
 function setSyncDot(state) {
   const d = document.getElementById('syncDot');
