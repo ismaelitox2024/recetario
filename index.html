@@ -92,6 +92,14 @@ main{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
 .rcard-body{padding:0.8rem 1rem;flex:1;display:flex;flex-direction:column;gap:0.25rem}
 .cpill{background:#EDE5D8;color:var(--inks);padding:0.12rem 0.42rem;border-radius:5px;font-size:0.68rem;display:inline-block}
 .mbadge{display:inline-block;background:var(--sage);color:#fff;font-size:0.68rem;padding:0.1rem 0.4rem;border-radius:7px;margin-top:0.3rem}
+.mbadge.full{background:var(--tc)}
+.score-bar{display:flex;gap:2px;margin-top:0.5rem;align-items:center}
+.score-pip{width:10px;height:10px;border-radius:50%;background:#EDE5D8;transition:background 0.2s}
+.score-pip.hit{background:var(--tc)}
+.ing-matched{display:flex;flex-wrap:wrap;gap:0.25rem;margin-top:0.4rem}
+.ing-chip{font-size:0.68rem;padding:0.12rem 0.42rem;border-radius:5px;display:inline-block}
+.ing-chip.hit{background:#FDEEE8;color:var(--tc);border:1px solid #F0C4B0;font-weight:500}
+.ing-chip.miss{background:#EDE5D8;color:#8A7A6A;border:1px solid #D9CCB8}
 .user-pill{background:#2A2018;color:var(--sagel);font-size:0.65rem;padding:0.1rem 0.4rem;border-radius:5px}
 
 .empty-s{text-align:center;padding:4rem 2rem;color:var(--inks)}
@@ -172,6 +180,46 @@ textarea{resize:vertical;min-height:80px}
 .name-box p{color:var(--inks);font-size:0.87rem;margin-bottom:1.5rem}
 .name-box input{margin-bottom:1rem}
 
+
+/* AI IMPORT */
+.ai-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem}
+@media(max-width:680px){.ai-grid{grid-template-columns:1fr}}
+.ai-card{background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:1.3rem;display:flex;flex-direction:column;gap:0.8rem}
+.ai-card h3{font-family:'Playfair Display',serif;font-size:1rem;color:var(--ink)}
+.ai-card p{font-size:0.82rem;color:var(--inks);line-height:1.5}
+.uinput{width:100%;padding:0.65rem 0.9rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;transition:border-color 0.2s}
+.uinput:focus{border-color:var(--tc)}
+.url-tags{display:flex;flex-direction:column;gap:0.4rem;margin-top:0.3rem}
+.url-tag{display:flex;align-items:center;gap:0.5rem;background:var(--paper);border:1px solid var(--bdr);border-radius:6px;padding:0.35rem 0.7rem;font-size:0.78rem;color:var(--inks)}
+.url-tag span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.url-tag button{background:none;border:none;color:#9A8A78;cursor:pointer;font-size:0.85rem}
+.url-tag button:hover{color:var(--tc)}
+.drop-img{border:2px dashed var(--bdr);border-radius:10px;padding:1.8rem 1rem;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--paper)}
+.drop-img:hover,.drop-img.over{border-color:var(--tc);background:#FDF0EA}
+.drop-img p{font-size:0.82rem;color:var(--inks)}
+.img-prev{width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:0.5rem;display:none}
+.itextarea{width:100%;padding:0.65rem 0.9rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.83rem;outline:none;resize:vertical;min-height:90px}
+.itextarea:focus{border-color:var(--tc)}
+.queue-box{background:var(--ink);border-radius:12px;padding:1.3rem;margin-bottom:1.2rem}
+.queue-box h3{font-family:'Playfair Display',serif;color:var(--cream);font-size:1rem;margin-bottom:0.8rem}
+.qi{background:#2A2018;border:1px solid #3A3028;border-radius:7px;padding:0.65rem 0.9rem;display:flex;align-items:center;gap:0.7rem;margin-bottom:0.4rem}
+.qi-lbl{flex:1;font-size:0.8rem;color:#C9B99A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qi-st{font-size:0.72rem;padding:0.12rem 0.45rem;border-radius:8px;white-space:nowrap}
+.qi-st.pending{background:#3A3028;color:#9A8A78}
+.qi-st.processing{background:#3A2010;color:var(--tcl)}
+.qi-st.done{background:#1A3020;color:var(--sagel)}
+.qi-st.error{background:#3A1010;color:#E07070}
+.prev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-top:1.2rem}
+.prev-card{background:#fff;border:2px solid var(--bdr);border-radius:12px;overflow:hidden;position:relative;transition:border-color 0.2s}
+.prev-card.sel{border-color:var(--tc)}
+.prev-img{width:100%;height:150px;object-fit:cover;background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:2.5rem}
+.prev-body{padding:0.9rem}
+.prev-name{font-family:'Playfair Display',serif;font-size:0.97rem;margin-bottom:0.3rem;line-height:1.3}
+.prev-meta{font-size:0.74rem;color:var(--inks);margin-bottom:0.4rem}
+.prev-ings{font-size:0.74rem;color:var(--inks);line-height:1.5;max-height:55px;overflow:hidden}
+.prev-check{position:absolute;top:0.5rem;right:0.5rem;width:22px;height:22px;border-radius:50%;border:2px solid var(--bdr);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.75rem;transition:all 0.2s}
+.prev-check.on{background:var(--tc);border-color:var(--tc);color:#fff}
+
 @media(max-width:600px){
   .frow{grid-template-columns:1fr}
   .toolbar{flex-direction:column;align-items:stretch}
@@ -206,6 +254,7 @@ textarea{resize:vertical;min-height:80px}
     <button class="nb active" id="nav-buscar" onclick="showView('buscar',this)">🔍 Ingredientes</button>
     <button class="nb" id="nav-recetas" onclick="showView('recetas',this)">📖 Recetas <span class="cbadge" id="cBadge">0</span></button>
     <button class="nb" id="nav-importar" onclick="showView('importar',this)">📥 Importar</button>
+    <button class="nb" id="nav-ai" onclick="showView('ai',this)">&#10024; Por IA</button>
     <span class="sync-dot" id="syncDot" title="Estado de sincronización"></span>
   </nav>
 </header>
@@ -282,6 +331,67 @@ textarea{resize:vertical;min-height:80px}
     </div>
   </div>
 
+  <!-- AI IMPORT VIEW -->
+  <div id="view-ai" class="view">
+    <p style="font-family:'Playfair Display',serif;font-size:1.7rem;margin-bottom:0.3rem">&#10024; A&ntilde;adir recetas con IA</p>
+    <p style="color:var(--inks);font-size:0.87rem;margin-bottom:1.5rem">Pega URLs de webs de recetas, sube fotos de libros o pega texto de un reel &mdash; la IA extrae todo autom&aacute;ticamente.</p>
+
+    <div class="ai-grid">
+      <div class="ai-card">
+        <h3>&#127760; URLs de recetas</h3>
+        <p>Pega la URL de cualquier web de recetas. Puedes a&ntilde;adir varias.</p>
+        <div style="display:flex;gap:0.5rem">
+          <input type="text" class="uinput" id="aiUrlInput" placeholder="https://www.bonviveur.es/recetas/...">
+          <button class="btn-p" onclick="aiAddUrl()" style="white-space:nowrap">+ A&ntilde;adir</button>
+        </div>
+        <div class="url-tags" id="aiUrlTags"></div>
+      </div>
+
+      <div class="ai-card">
+        <h3>&#128247; Foto o captura</h3>
+        <p>Foto de libro, cuaderno o captura de Instagram/TikTok.</p>
+        <div class="drop-img" id="aiDropImg"
+          ondragover="event.preventDefault();this.classList.add('over')"
+          ondragleave="this.classList.remove('over')"
+          ondrop="aiHandleImgDrop(event)"
+          onclick="document.getElementById('aiImgFile').click()">
+          <p style="font-size:1.6rem;margin-bottom:0.4rem">&#128247;</p>
+          <p><strong>Clic</strong> o arrastra imagen (JPG, PNG &mdash; m&aacute;x 5MB)</p>
+        </div>
+        <img id="aiImgPreview" class="img-prev" alt="">
+        <input type="file" id="aiImgFile" accept="image/*" style="display:none" onchange="aiHandleImgFile(event)">
+      </div>
+
+      <div class="ai-card" style="grid-column:1/-1">
+        <h3>&#128241; Texto de reel / descripci&oacute;n</h3>
+        <p>Copia y pega el texto del reel de Instagram o TikTok con la receta.</p>
+        <textarea class="itextarea" id="aiTextInput" placeholder="Pega aqu&iacute; el texto con la receta..."></textarea>
+      </div>
+    </div>
+
+    <div id="aiQueueBox" style="display:none">
+      <div class="queue-box">
+        <h3>Cola de procesamiento <span id="aiQueueCount" style="font-size:0.78rem;color:#9A8A78"></span></h3>
+        <div id="aiQueueList"></div>
+      </div>
+    </div>
+
+    <button class="btn-p" id="aiBtnProcess" onclick="aiProcess()" style="display:none;padding:0.85rem 2rem;font-size:0.95rem;margin-bottom:2rem">
+      &#10024; Procesar con IA
+    </button>
+
+    <div id="aiPreviewSection" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem;margin-bottom:1rem">
+        <p style="font-family:'Playfair Display',serif;font-size:1.2rem">Recetas extra&iacute;das &mdash; revisa y guarda</p>
+        <div style="display:flex;gap:0.5rem">
+          <button class="btn-s" onclick="aiToggleAll()">Seleccionar todas</button>
+          <button class="btn-p" onclick="aiSaveSelected()">Guardar seleccionadas</button>
+        </div>
+      </div>
+      <div class="prev-grid" id="aiPreviewGrid"></div>
+    </div>
+  </div>
+
 </main>
 
 <!-- DETAIL -->
@@ -331,31 +441,49 @@ let recipes  = [];
 let userName = localStorage.getItem(USER_KEY) || '';
 let editingId = null;
 
+// ─── STORAGE LAYER: Claude cloud OR localStorage fallback ──────────────────
+const HAS_CLOUD = (function() {
+  try { return typeof window.storage !== 'undefined' && window.storage !== null; }
+  catch(e) { return false; }
+})();
+
+async function storageGet(key) {
+  if (HAS_CLOUD) {
+    try { const r = await window.storage.get(key, true); return r ? r.value : null; }
+    catch(e) { return null; }
+  }
+  return localStorage.getItem(key);
+}
+
+async function storageSet(key, value) {
+  if (HAS_CLOUD) {
+    try { await window.storage.set(key, value, true); return true; }
+    catch(e) { return false; }
+  }
+  try { localStorage.setItem(key, value); return true; }
+  catch(e) { return false; }
+}
+
 // ─── INIT ───────────────────────────────────────────
 async function init() {
-  setLoad(20, 'Conectando al almacén compartido…');
+  setLoad(20, HAS_CLOUD ? 'Conectando al almacén compartido…' : 'Cargando recetas…');
 
-  // Try to load from shared cloud storage first
-  try {
-    const result = await window.storage.get(STORE_KEY, true); // shared=true
-    if (result && result.value) {
-      recipes = JSON.parse(result.value);
-      setLoad(70, `${recipes.length} recetas cargadas…`);
-    }
-  } catch(e) {
-    // Key doesn't exist yet — first time setup
-    setLoad(50, 'Primera configuración…');
+  const stored = await storageGet(STORE_KEY);
+  if (stored) {
+    try {
+      recipes = JSON.parse(stored);
+      setLoad(70, recipes.length + ' recetas cargadas…');
+    } catch(e) { recipes = []; }
   }
 
-  // If no cloud recipes yet, seed with bundled data
   if (recipes.length === 0 && window.RECIPES_DATA && window.RECIPES_DATA.length > 0) {
-    setLoad(60, `Cargando ${window.RECIPES_DATA.length} recetas…`);
+    setLoad(60, 'Cargando ' + window.RECIPES_DATA.length + ' recetas…');
     recipes = window.RECIPES_DATA;
     await saveToCloud();
   }
 
   setLoad(100, '¡Listo!');
-  setTimeout(() => {
+  setTimeout(function() {
     document.getElementById('loadingScreen').style.display = 'none';
     if (!userName) {
       document.getElementById('nameScreen').classList.add('open');
@@ -381,34 +509,29 @@ function finishInit() {
 // ─── CLOUD SAVE ─────────────────────────────────────
 async function saveToCloud() {
   setSyncDot('syncing');
-  try {
-    await window.storage.set(STORE_KEY, JSON.stringify(recipes), true); // shared=true
-    setSyncDot('ok');
-    return true;
-  } catch(e) {
-    setSyncDot('err');
-    showToast('⚠️ Error al guardar en la nube');
-    return false;
-  }
+  const ok = await storageSet(STORE_KEY, JSON.stringify(recipes));
+  if (ok) { setSyncDot('ok'); return true; }
+  setSyncDot('err');
+  showToast('⚠️ Error al guardar');
+  return false;
 }
 
-// ─── SYNC: poll for changes every 30s ───────────────
-setInterval(async () => {
-  try {
-    const result = await window.storage.get(STORE_KEY, true);
-    if (result && result.value) {
-      const remote = JSON.parse(result.value);
+// ─── SYNC: poll every 30s (cloud only) ──────────────
+if (HAS_CLOUD) {
+  setInterval(async function() {
+    try {
+      const stored = await storageGet(STORE_KEY);
+      if (!stored) return;
+      const remote = JSON.parse(stored);
       if (remote.length !== recipes.length) {
         recipes = remote;
-        updateBadge();
-        populateFilters();
-        filterAndRender();
+        updateBadge(); populateFilters(); filterAndRender();
         document.getElementById('totalCount').textContent = recipes.length;
         showToast('🔄 Recetario actualizado');
       }
-    }
-  } catch {}
-}, 30000);
+    } catch(e) {}
+  }, 30000);
+}
 
 function setSyncDot(state) {
   const d = document.getElementById('syncDot');
@@ -463,14 +586,29 @@ function renderIngTags() {
 async function doSearch() {
   document.getElementById('searchResults').style.display='block';
   document.getElementById('aiContent').innerHTML='<div class="ai-loading"><div class="spinner"></div> Consultando a la IA…</div>';
-  const matches = recipes.filter(r => ings.some(i => r.ingredients.toLowerCase().includes(i)));
+
+  // Score each recipe by how many search ingredients it contains
+  const scored = recipes.map(r => {
+    const ingText = r.ingredients.toLowerCase();
+    const matched = ings.filter(i => ingText.includes(i));
+    return { r, matched, score: matched.length };
+  }).filter(x => x.score > 0)
+    .sort((a, b) => b.score - a.score || a.r.name.localeCompare(b.r.name));
+
   const title = document.getElementById('matchTitle');
   const grid = document.getElementById('matchGrid');
-  title.textContent = matches.length
-    ? `📖 En el recetario — ${matches.length} coincidencia${matches.length>1?'s':''}`
-    : '';
-  grid.innerHTML = matches.map(r => miniCard(r, true)).join('') ||
-    `<p style="color:var(--inks);font-size:0.87rem">Ninguna receta coincide. Prueba con otros ingredientes.</p>`;
+
+  if (scored.length) {
+    const perfect = scored.filter(x => x.score === ings.length).length;
+    title.textContent = `📖 En el recetario — ${scored.length} receta${scored.length>1?'s':''} ordenadas por coincidencia`;
+    if (perfect > 0) {
+      title.textContent += ` (${perfect} con todos los ingredientes)`;
+    }
+    grid.innerHTML = scored.map(({r, matched, score}) => miniCard(r, matched, score)).join('');
+  } else {
+    title.textContent = '';
+    grid.innerHTML = `<p style="color:var(--inks);font-size:0.87rem">Ninguna receta coincide. Prueba con otros ingredientes.</p>`;
+  }
   await askAI();
 }
 
@@ -540,12 +678,38 @@ function renderPage() {
   const total = Math.ceil(filtered.length/PAGE);
   const page = filtered.slice((currentPage-1)*PAGE, currentPage*PAGE);
   rc.textContent = `${filtered.length} receta${filtered.length!==1?'s':''}`;
-  list.innerHTML = page.map(r => miniCard(r, false)).join('');
+  list.innerHTML = page.map(r => miniCard(r, null, 0)).join('');
   renderPagination(total);
 }
 
-function miniCard(r, showBadge) {
+function miniCard(r, matchedIngs, score) {
+  // matchedIngs: array of matched ingredient strings (search mode)
+  // score: number of matches (search mode) or undefined (browse mode)
   const tt = totalTime(r);
+  const isSearchMode = Array.isArray(matchedIngs);
+  const total = isSearchMode ? ings.length : 0;
+  const isFull = isSearchMode && score === total && total > 0;
+
+  // Build score pips
+  let scorePips = '';
+  if (isSearchMode && total > 1) {
+    scorePips = `<div class="score-bar">
+      ${Array.from({length: total}, (_,i) =>
+        `<div class="score-pip${i < score ? ' hit' : ''}"></div>`
+      ).join('')}
+      <span style="font-size:0.68rem;color:var(--inks);margin-left:4px">${score}/${total}</span>
+    </div>`;
+  }
+
+  // Show matched ingredient chips
+  let ingChips = '';
+  if (isSearchMode) {
+    ingChips = `<div class="ing-matched">
+      ${matchedIngs.map(i => `<span class="ing-chip hit">✓ ${i}</span>`).join('')}
+      ${ings.filter(i => !matchedIngs.includes(i)).map(i => `<span class="ing-chip miss">✗ ${i}</span>`).join('')}
+    </div>`;
+  }
+
   return `<div class="rcard" onclick="openDetail('${r.id}')">
     <div class="rcard-head">
       <span class="rcard-emoji">${r.emoji||'🍽️'}</span>
@@ -557,9 +721,14 @@ function miniCard(r, showBadge) {
       </div>
     </div>
     <div class="rcard-body">
-      ${(r.categories||[]).slice(0,2).map(c=>`<span class="cpill">${c}</span>`).join(' ')}
-      ${(r.collections||[]).slice(0,1).map(c=>`<span class="cpill">📁 ${c}</span>`).join('')}
-      ${showBadge?'<span class="mbadge">✓ Coincide</span>':''}
+      ${isSearchMode ? `
+        ${isFull ? `<span class="mbadge full">✓ Todos los ingredientes</span>` : `<span class="mbadge">✓ ${score} coincidencia${score>1?'s':''}</span>`}
+        ${scorePips}
+        ${ingChips}
+      ` : `
+        ${(r.categories||[]).slice(0,2).map(c=>`<span class="cpill">${c}</span>`).join(' ')}
+        ${(r.collections||[]).slice(0,1).map(c=>`<span class="cpill">📁 ${c}</span>`).join('')}
+      `}
     </div>
   </div>`;
 }
@@ -770,6 +939,295 @@ function showToast(msg) {
   setTimeout(()=>t.classList.remove('show'),3000);
 }
 function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+
+
+// ═══════════════════════════════════════════════
+//  AI IMPORT MODULE
+// ═══════════════════════════════════════════════
+var aiQueue = [];
+var aiPreviews = [];
+var aiSelected = new Set();
+
+// ── URL input ──────────────────────────────────
+function aiAddUrl() {
+  var inp = document.getElementById('aiUrlInput');
+  var url = inp.value.trim();
+  if (!url || url.indexOf('http') !== 0) { showToast('Introduce una URL válida'); return; }
+  aiQueue.push({ type: 'url', label: url, data: url, status: 'pending' });
+  inp.value = '';
+  aiRenderQueue();
+}
+document.getElementById('aiUrlInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') aiAddUrl();
+});
+
+// ── Image drop/select ──────────────────────────
+function aiHandleImgDrop(e) {
+  e.preventDefault();
+  document.getElementById('aiDropImg').classList.remove('over');
+  var f = e.dataTransfer.files[0]; if (f) aiLoadImg(f);
+}
+function aiHandleImgFile(e) { var f = e.target.files[0]; if (f) aiLoadImg(f); }
+
+function aiLoadImg(file) {
+  if (!file.type.match(/^image/)) { showToast('Solo imágenes'); return; }
+  if (file.size > 6 * 1024 * 1024) { showToast('Máximo 5MB'); return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var dataUrl = e.target.result;
+    var prev = document.getElementById('aiImgPreview');
+    prev.src = dataUrl;
+    prev.style.display = 'block';
+    document.getElementById('aiDropImg').style.display = 'none';
+    aiQueue.push({ type: 'image', label: '📷 ' + file.name, data: dataUrl, status: 'pending' });
+    aiRenderQueue();
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── Queue render ───────────────────────────────
+function aiRenderQueue() {
+  var box = document.getElementById('aiQueueBox');
+  var btn = document.getElementById('aiBtnProcess');
+  var list = document.getElementById('aiQueueList');
+  var cnt = document.getElementById('aiQueueCount');
+  if (aiQueue.length === 0) { box.style.display = 'none'; btn.style.display = 'none'; return; }
+  box.style.display = 'block'; btn.style.display = 'inline-block';
+  cnt.textContent = '(' + aiQueue.length + ' elemento' + (aiQueue.length > 1 ? 's' : '') + ')';
+  var icons = { url: '🌐', image: '📷', text: '📱' };
+  var stLabels = { pending: 'Pendiente', processing: '⏳ Procesando…', done: '✓ Listo', error: '✗ Error' };
+  list.innerHTML = '';
+  aiQueue.forEach(function(item, i) {
+    var row = document.createElement('div');
+    row.className = 'qi';
+    row.innerHTML = '<span style="font-size:1rem">' + (icons[item.type] || '📄') + '</span>' +
+      '<span class="qi-lbl" title="' + item.label + '">' + item.label.substring(0, 60) + '</span>' +
+      '<span class="qi-st ' + item.status + '">' + (stLabels[item.status] || item.status) + '</span>' +
+      (item.status === 'pending' ? '<button onclick="aiRemove(' + i + ')" style="background:none;border:none;color:#6A5A4A;cursor:pointer">✕</button>' : '');
+    list.appendChild(row);
+  });
+}
+
+function aiRemove(i) { aiQueue.splice(i, 1); aiRenderQueue(); }
+
+// ── Process ────────────────────────────────────
+async function aiProcess() {
+  // Flush text input
+  var txt = document.getElementById('aiTextInput').value.trim();
+  if (txt.length > 20) {
+    aiQueue.push({ type: 'text', label: '📱 Texto: ' + txt.substring(0, 40) + '…', data: txt, status: 'pending' });
+    document.getElementById('aiTextInput').value = '';
+  }
+  var pending = aiQueue.filter(function(x) { return x.status === 'pending'; });
+  if (!pending.length) { showToast('No hay elementos pendientes'); return; }
+
+  var btn = document.getElementById('aiBtnProcess');
+  btn.disabled = true; btn.textContent = '⏳ Procesando…';
+  aiPreviews = []; aiSelected = new Set();
+  document.getElementById('aiPreviewSection').style.display = 'none';
+
+  for (var i = 0; i < aiQueue.length; i++) {
+    var item = aiQueue[i];
+    if (item.status !== 'pending') continue;
+    item.status = 'processing'; aiRenderQueue();
+    try {
+      var recipe = null;
+      if (item.type === 'url') recipe = await aiExtractUrl(item.data);
+      else if (item.type === 'image') recipe = await aiExtractImg(item.data);
+      else if (item.type === 'text') recipe = await aiExtractText(item.data);
+      if (recipe) { item.status = 'done'; aiPreviews.push(recipe); aiSelected.add(aiPreviews.length - 1); }
+      else item.status = 'error';
+    } catch(e) { console.error(e); item.status = 'error'; }
+    aiRenderQueue();
+  }
+
+  btn.disabled = false; btn.textContent = '✨ Procesar con IA';
+  if (aiPreviews.length > 0) {
+    aiRenderPreviews();
+    document.getElementById('aiPreviewSection').style.display = 'block';
+    document.getElementById('aiPreviewSection').scrollIntoView({ behavior: 'smooth' });
+  } else {
+    showToast('No se pudo extraer ninguna receta');
+  }
+}
+
+// ── Claude API calls ───────────────────────────
+async function aiCallClaude(prompt, useSearch) {
+  var body = { model: 'claude-sonnet-4-20250514', max_tokens: 2000,
+    messages: [{ role: 'user', content: prompt }] };
+  if (useSearch) body.tools = [{ type: 'web_search_20250305', name: 'web_search' }];
+  var res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+  });
+  var data = await res.json();
+  return (data.content || []).filter(function(b) { return b.type === 'text'; }).map(function(b) { return b.text; }).join('');
+}
+
+async function aiCallClaudeImg(prompt, b64, mtype) {
+  var res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 2000,
+      messages: [{ role: 'user', content: [
+        { type: 'image', source: { type: 'base64', media_type: mtype, data: b64 } },
+        { type: 'text', text: prompt }
+      ]}]
+    })
+  });
+  var data = await res.json();
+  var block = (data.content || []).find(function(b) { return b.type === 'text'; });
+  return block ? block.text : '';
+}
+
+function aiJsonPrompt(context) {
+  return context + '\n\nDevuelve SOLO JSON válido, sin markdown, con esta estructura exacta:\n' +
+    '{"name":"","emoji":"","categories":[],"collections":[],"servings":"","prepTime":"","cookTime":"","ingredients":"línea1\\nlínea2","steps":"paso1\\npaso2","notes":"","source":"","imageUrl":""}\n' +
+    'prepTime y cookTime: solo número en minutos. ingredients y steps: separados por \\n. imageUrl: URL absoluta de la foto principal si existe.';
+}
+
+function aiParseJSON(text, src) {
+  if (!text) return null;
+  try {
+    var clean = text.replace(/```json/g, '').replace(/```/g, '').trim();
+    var m = clean.match(/\{[\s\S]*\}/);
+    if (!m) return null;
+    var obj = JSON.parse(m[0]);
+    if (!obj.name) return null;
+    obj.id = 'ai_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    obj.categories = Array.isArray(obj.categories) ? obj.categories : [];
+    obj.collections = Array.isArray(obj.collections) ? obj.collections : [];
+    obj.favourite = false; obj.rating = 0; obj.addedBy = userName;
+    obj.source = obj.source || src;
+    if (!obj.emoji) obj.emoji = guessEmoji(obj.categories, obj.collections, '', obj.name, obj.ingredients || '');
+    return obj;
+  } catch(e) { console.error('Parse error', e, text.substring(0, 200)); return null; }
+}
+
+async function aiExtractUrl(url) {
+  var prompt = aiJsonPrompt('Accede a esta URL y extrae la receta completa: ' + url + '\nsource debe ser: ' + url);
+  var text = await aiCallClaude(prompt, true);
+  return aiParseJSON(text, url);
+}
+
+async function aiExtractImg(dataUrl) {
+  var parts = dataUrl.split(',');
+  var mtype = parts[0].split(':')[1].split(';')[0];
+  var b64 = parts[1];
+  var prompt = aiJsonPrompt('Analiza esta imagen y extrae la receta que contiene (puede ser de libro, cuaderno o captura de redes sociales). source: "Foto"');
+  var text = await aiCallClaudeImg(prompt, b64, mtype);
+  return aiParseJSON(text, 'Foto');
+}
+
+async function aiExtractText(txt) {
+  var prompt = aiJsonPrompt('Extrae la receta de este texto (puede venir de un reel de Instagram/TikTok con emojis y formato informal):\n---\n' + txt + '\n---\nsource: "Instagram/TikTok"');
+  var text = await aiCallClaude(prompt, false);
+  return aiParseJSON(text, 'Texto');
+}
+
+// ── Preview render ─────────────────────────────
+function aiRenderPreviews() {
+  var grid = document.getElementById('aiPreviewGrid');
+  grid.innerHTML = '';
+  aiPreviews.forEach(function(r, i) {
+    var sel = aiSelected.has(i);
+    var tt = (parseInt(r.prepTime) || 0) + (parseInt(r.cookTime) || 0);
+    var ingLines = (r.ingredients || '').split('\n').filter(Boolean).slice(0, 4);
+    var hasImg = r.imageUrl && r.imageUrl.indexOf('http') === 0;
+
+    var card = document.createElement('div');
+    card.className = 'prev-card' + (sel ? ' sel' : '');
+    card.id = 'pcard_' + i;
+
+    var imgDiv = document.createElement('div');
+    imgDiv.className = 'prev-img';
+    if (hasImg) {
+      var img = document.createElement('img');
+      img.src = r.imageUrl; img.alt = r.name;
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover';
+      img.onerror = function() { imgDiv.textContent = r.emoji || '🍽️'; };
+      imgDiv.appendChild(img);
+    } else {
+      imgDiv.textContent = r.emoji || '🍽️';
+    }
+    card.appendChild(imgDiv);
+
+    var body = document.createElement('div');
+    body.className = 'prev-body';
+
+    var name = document.createElement('div');
+    name.className = 'prev-name'; name.textContent = r.name;
+    body.appendChild(name);
+
+    var meta = document.createElement('div');
+    meta.className = 'prev-meta';
+    meta.textContent = (tt ? '⏱ ' + tt + 'm' : '') + (r.categories.length ? ' · ' + r.categories.slice(0,2).join(', ') : '') + (r.servings ? ' · 👥 ' + r.servings : '');
+    body.appendChild(meta);
+
+    var ings = document.createElement('div');
+    ings.className = 'prev-ings';
+    ings.textContent = ingLines.map(function(l) { return '• ' + l; }).join('\n');
+    body.appendChild(ings);
+
+    var viewBtn = document.createElement('button');
+    viewBtn.className = 'btn-s';
+    viewBtn.style.cssText = 'margin-top:0.6rem;font-size:0.76rem;padding:0.28rem 0.65rem';
+    viewBtn.textContent = 'Ver completa →';
+    viewBtn.onclick = (function(idx) { return function() { aiOpenPreview(idx); }; })(i);
+    body.appendChild(viewBtn);
+    card.appendChild(body);
+
+    var chk = document.createElement('div');
+    chk.className = 'prev-check' + (sel ? ' on' : '');
+    chk.textContent = sel ? '✓' : '';
+    chk.onclick = (function(idx) { return function() { aiToggle(idx); }; })(i);
+    card.appendChild(chk);
+
+    grid.appendChild(card);
+  });
+}
+
+function aiToggle(i) {
+  if (aiSelected.has(i)) aiSelected.delete(i); else aiSelected.add(i);
+  aiRenderPreviews();
+}
+
+function aiToggleAll() {
+  if (aiSelected.size === aiPreviews.length) aiSelected.clear();
+  else aiPreviews.forEach(function(_, i) { aiSelected.add(i); });
+  aiRenderPreviews();
+}
+
+function aiOpenPreview(i) {
+  var r = aiPreviews[i];
+  var tmp = JSON.parse(JSON.stringify(r));
+  tmp.id = 'tmp_preview_' + i;
+  recipes.push(tmp);
+  openDetail(tmp.id);
+  // cleanup on close
+  window._aiPreviewCleanup = function() {
+    recipes = recipes.filter(function(x) { return x.id !== tmp.id; });
+    window._aiPreviewCleanup = null;
+  };
+}
+
+var _origClose = closeDetail;
+closeDetail = function() { _origClose(); if (window._aiPreviewCleanup) window._aiPreviewCleanup(); };
+
+async function aiSaveSelected() {
+  if (aiSelected.size === 0) { showToast('Selecciona al menos una receta'); return; }
+  var toSave = Array.from(aiSelected).map(function(i) { return aiPreviews[i]; });
+  recipes = recipes.concat(toSave);
+  var ok = await saveToCloud();
+  if (ok) {
+    showToast('✅ ' + toSave.length + ' receta' + (toSave.length > 1 ? 's' : '') + ' guardada' + (toSave.length > 1 ? 's' : ''));
+    var savedIdx = new Set(aiSelected);
+    aiPreviews = aiPreviews.filter(function(_, i) { return !savedIdx.has(i); });
+    aiSelected.clear();
+    aiQueue = aiQueue.filter(function(x) { return x.status !== 'done'; });
+    aiRenderQueue(); updateBadge(); populateFilters();
+    if (aiPreviews.length === 0) document.getElementById('aiPreviewSection').style.display = 'none';
+    else aiRenderPreviews();
+  }
+}
 
 // ─── START ───────────────────────────────────────────
 window.addEventListener('load', init);
