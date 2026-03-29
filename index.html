@@ -92,6 +92,14 @@ main{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
 .rcard-body{padding:0.8rem 1rem;flex:1;display:flex;flex-direction:column;gap:0.25rem}
 .cpill{background:#EDE5D8;color:var(--inks);padding:0.12rem 0.42rem;border-radius:5px;font-size:0.68rem;display:inline-block}
 .mbadge{display:inline-block;background:var(--sage);color:#fff;font-size:0.68rem;padding:0.1rem 0.4rem;border-radius:7px;margin-top:0.3rem}
+.mbadge.full{background:var(--tc)}
+.score-bar{display:flex;gap:2px;margin-top:0.5rem;align-items:center}
+.score-pip{width:10px;height:10px;border-radius:50%;background:#EDE5D8;transition:background 0.2s}
+.score-pip.hit{background:var(--tc)}
+.ing-matched{display:flex;flex-wrap:wrap;gap:0.25rem;margin-top:0.4rem}
+.ing-chip{font-size:0.68rem;padding:0.12rem 0.42rem;border-radius:5px;display:inline-block}
+.ing-chip.hit{background:#FDEEE8;color:var(--tc);border:1px solid #F0C4B0;font-weight:500}
+.ing-chip.miss{background:#EDE5D8;color:#8A7A6A;border:1px solid #D9CCB8}
 .user-pill{background:#2A2018;color:var(--sagel);font-size:0.65rem;padding:0.1rem 0.4rem;border-radius:5px}
 
 .empty-s{text-align:center;padding:4rem 2rem;color:var(--inks)}
@@ -172,6 +180,50 @@ textarea{resize:vertical;min-height:80px}
 .name-box p{color:var(--inks);font-size:0.87rem;margin-bottom:1.5rem}
 .name-box input{margin-bottom:1rem}
 
+
+/* ── AI IMPORT VIEW ── */
+.ai-import-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
+@media(max-width:700px){.ai-import-grid{grid-template-columns:1fr}}
+.ai-import-card{background:#fff;border:1px solid var(--bdr);border-radius:14px;padding:1.5rem;display:flex;flex-direction:column;gap:1rem}
+.ai-import-card h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--ink);display:flex;align-items:center;gap:0.5rem}
+.ai-import-card p{font-size:0.83rem;color:var(--inks);line-height:1.5}
+.url-input{width:100%;padding:0.7rem 1rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.87rem;outline:none;transition:border-color 0.2s}
+.url-input:focus{border-color:var(--tc)}
+.url-list{display:flex;flex-direction:column;gap:0.5rem}
+.url-tag{display:flex;align-items:center;gap:0.5rem;background:var(--paper);border:1px solid var(--bdr);border-radius:6px;padding:0.4rem 0.7rem;font-size:0.8rem;color:var(--inks)}
+.url-tag span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.url-tag button{background:none;border:none;color:#9A8A78;cursor:pointer;font-size:0.9rem;flex-shrink:0}
+.url-tag button:hover{color:var(--tc)}
+.img-drop{border:2px dashed var(--bdr);border-radius:10px;padding:2rem 1rem;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--paper)}
+.img-drop:hover,.img-drop.over{border-color:var(--tc);background:#FDF0EA}
+.img-drop p{font-size:0.82rem;color:var(--inks)}
+.img-drop strong{color:var(--tc)}
+.img-preview{width:100%;max-height:200px;object-fit:cover;border-radius:8px;display:none}
+.insta-area{width:100%;padding:0.7rem 1rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;resize:vertical;min-height:100px;transition:border-color 0.2s}
+.insta-area:focus{border-color:var(--tc)}
+.ai-queue{background:var(--ink);border-radius:14px;padding:1.5rem;margin-bottom:2rem}
+.ai-queue h3{font-family:'Playfair Display',serif;color:var(--cream);font-size:1.1rem;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}
+.queue-item{background:#2A2018;border:1px solid #3A3028;border-radius:8px;padding:0.8rem 1rem;display:flex;align-items:center;gap:0.8rem;margin-bottom:0.5rem}
+.queue-item .qi-icon{font-size:1.2rem;flex-shrink:0}
+.queue-item .qi-label{flex:1;font-size:0.82rem;color:#C9B99A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.queue-item .qi-status{font-size:0.75rem;padding:0.15rem 0.5rem;border-radius:10px;white-space:nowrap}
+.qi-status.pending{background:#3A3028;color:#9A8A78}
+.qi-status.processing{background:#3A2010;color:var(--tcl)}
+.qi-status.done{background:#1A3020;color:var(--sagel)}
+.qi-status.error{background:#3A1010;color:#E07070}
+.preview-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-top:1.5rem}
+.preview-card{background:#fff;border:2px solid var(--bdr);border-radius:12px;overflow:hidden;position:relative}
+.preview-card.selected{border-color:var(--tc)}
+.preview-card-img{width:100%;height:160px;object-fit:cover;background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:3rem}
+.preview-card-img img{width:100%;height:100%;object-fit:cover}
+.preview-card-body{padding:1rem}
+.preview-card-name{font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:0.4rem}
+.preview-card-meta{font-size:0.76rem;color:var(--inks);margin-bottom:0.6rem}
+.preview-card-ings{font-size:0.76rem;color:var(--inks);line-height:1.5;max-height:60px;overflow:hidden}
+.preview-check{position:absolute;top:0.6rem;right:0.6rem;width:24px;height:24px;border-radius:50%;border:2px solid var(--bdr);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.8rem;transition:all 0.2s}
+.preview-check.checked{background:var(--tc);border-color:var(--tc);color:#fff}
+.btn-import-sel{width:100%;padding:0.9rem;margin-top:1.2rem;font-size:0.95rem}
+
 @media(max-width:600px){
   .frow{grid-template-columns:1fr}
   .toolbar{flex-direction:column;align-items:stretch}
@@ -206,6 +258,7 @@ textarea{resize:vertical;min-height:80px}
     <button class="nb active" id="nav-buscar" onclick="showView('buscar',this)">🔍 Ingredientes</button>
     <button class="nb" id="nav-recetas" onclick="showView('recetas',this)">📖 Recetas <span class="cbadge" id="cBadge">0</span></button>
     <button class="nb" id="nav-importar" onclick="showView('importar',this)">📥 Importar</button>
+    <button class="nb" id="nav-ai" onclick="showView('ai',this)">✨ Añadir por IA</button>
     <span class="sync-dot" id="syncDot" title="Estado de sincronización"></span>
   </nav>
 </header>
@@ -281,6 +334,79 @@ textarea{resize:vertical;min-height:80px}
       </div>
     </div>
   </div>
+
+  <!-- ✨ AÑADIR POR IA -->
+  <div id="view-ai" class="view">
+    <div style="margin-bottom:1.5rem">
+      <p style="font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:0.3rem">✨ Añadir recetas con IA</p>
+      <p style="color:var(--inks);font-size:0.88rem">Pega URLs de webs de recetas, sube fotos de libros o pega el texto de un reel — la IA extrae todo automáticamente.</p>
+    </div>
+
+    <div class="ai-import-grid">
+
+      <!-- URLs -->
+      <div class="ai-import-card">
+        <h3>🌐 URLs de recetas</h3>
+        <p>Pega la URL de cualquier web de recetas (Diario de Mallorca, Bon Viveur, Karlos Arguiñano, etc.)</p>
+        <div style="display:flex;gap:0.5rem">
+          <input type="text" class="url-input" id="urlInput" placeholder="https://www.bonviveur.es/recetas/…" onkeydown="if(event.key==='Enter')addUrl()">
+          <button class="btn-p" onclick="addUrl()" style="white-space:nowrap">＋ Añadir</button>
+        </div>
+        <div class="url-list" id="urlList"></div>
+      </div>
+
+      <!-- Foto libro / captura Instagram -->
+      <div class="ai-import-card">
+        <h3>📷 Foto o captura</h3>
+        <p>Sube foto de receta de libro, cuaderno o captura de pantalla de Instagram/TikTok.</p>
+        <div class="img-drop" id="imgDrop"
+          onclick="document.getElementById('imgFileInput').click()"
+          ondragover="event.preventDefault();this.classList.add('over')"
+          ondragleave="this.classList.remove('over')"
+          ondrop="handleImgDrop(event)">
+          <p style="font-size:1.8rem;margin-bottom:0.5rem">📸</p>
+          <p><strong>Clic</strong> o arrastra imagen aquí</p>
+          <p style="margin-top:0.3rem;font-size:0.75rem">JPG, PNG, WEBP — máx. 5MB</p>
+        </div>
+        <img id="imgPreview" class="img-preview" alt="Preview">
+        <input type="file" id="imgFileInput" accept="image/*" style="display:none" onchange="handleImgFile(event)">
+      </div>
+
+      <!-- Texto Instagram -->
+      <div class="ai-import-card" style="grid-column:1/-1">
+        <h3>📱 Texto de reel / descripción</h3>
+        <p>Copia y pega la descripción del reel de Instagram o TikTok con la receta (ingredientes, pasos…)</p>
+        <textarea class="insta-area" id="instaText" placeholder="Pega aquí el texto con la receta…&#10;&#10;Ej: 🍕 PIZZA CASERA FÁCIL&#10;Ingredientes: 500g harina, 1 sobre levadura…"></textarea>
+      </div>
+
+    </div>
+
+    <!-- QUEUE + PROCESS BUTTON -->
+    <div id="aiQueueWrap" style="display:none">
+      <div class="ai-queue">
+        <h3>📋 Cola de procesamiento <span id="queueCount" style="font-size:0.8rem;color:#9A8A78"></span></h3>
+        <div id="queueList"></div>
+      </div>
+    </div>
+
+    <button class="btn-p btn-import-sel" id="btnProcess" onclick="processQueue()" style="display:none;max-width:400px">
+      ✨ Procesar con IA →
+    </button>
+
+    <!-- PREVIEW RESULTS -->
+    <div id="previewSection" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.8rem">
+        <p style="font-family:'Playfair Display',serif;font-size:1.3rem">Recetas extraídas — revisa y guarda</p>
+        <div style="display:flex;gap:0.5rem">
+          <button class="btn-s" onclick="selectAllPreviews()">Seleccionar todas</button>
+          <button class="btn-p" id="btnSaveSelected" onclick="saveSelected()">💾 Guardar seleccionadas</button>
+        </div>
+      </div>
+      <div class="preview-cards" id="previewCards"></div>
+    </div>
+
+  </div>
+
 
 </main>
 
@@ -463,14 +589,29 @@ function renderIngTags() {
 async function doSearch() {
   document.getElementById('searchResults').style.display='block';
   document.getElementById('aiContent').innerHTML='<div class="ai-loading"><div class="spinner"></div> Consultando a la IA…</div>';
-  const matches = recipes.filter(r => ings.some(i => r.ingredients.toLowerCase().includes(i)));
+
+  // Score each recipe by how many search ingredients it contains
+  const scored = recipes.map(r => {
+    const ingText = r.ingredients.toLowerCase();
+    const matched = ings.filter(i => ingText.includes(i));
+    return { r, matched, score: matched.length };
+  }).filter(x => x.score > 0)
+    .sort((a, b) => b.score - a.score || a.r.name.localeCompare(b.r.name));
+
   const title = document.getElementById('matchTitle');
   const grid = document.getElementById('matchGrid');
-  title.textContent = matches.length
-    ? `📖 En el recetario — ${matches.length} coincidencia${matches.length>1?'s':''}`
-    : '';
-  grid.innerHTML = matches.map(r => miniCard(r, true)).join('') ||
-    `<p style="color:var(--inks);font-size:0.87rem">Ninguna receta coincide. Prueba con otros ingredientes.</p>`;
+
+  if (scored.length) {
+    const perfect = scored.filter(x => x.score === ings.length).length;
+    title.textContent = `📖 En el recetario — ${scored.length} receta${scored.length>1?'s':''} ordenadas por coincidencia`;
+    if (perfect > 0) {
+      title.textContent += ` (${perfect} con todos los ingredientes)`;
+    }
+    grid.innerHTML = scored.map(({r, matched, score}) => miniCard(r, matched, score)).join('');
+  } else {
+    title.textContent = '';
+    grid.innerHTML = `<p style="color:var(--inks);font-size:0.87rem">Ninguna receta coincide. Prueba con otros ingredientes.</p>`;
+  }
   await askAI();
 }
 
@@ -540,12 +681,38 @@ function renderPage() {
   const total = Math.ceil(filtered.length/PAGE);
   const page = filtered.slice((currentPage-1)*PAGE, currentPage*PAGE);
   rc.textContent = `${filtered.length} receta${filtered.length!==1?'s':''}`;
-  list.innerHTML = page.map(r => miniCard(r, false)).join('');
+  list.innerHTML = page.map(r => miniCard(r, null, 0)).join('');
   renderPagination(total);
 }
 
-function miniCard(r, showBadge) {
+function miniCard(r, matchedIngs, score) {
+  // matchedIngs: array of matched ingredient strings (search mode)
+  // score: number of matches (search mode) or undefined (browse mode)
   const tt = totalTime(r);
+  const isSearchMode = Array.isArray(matchedIngs);
+  const total = isSearchMode ? ings.length : 0;
+  const isFull = isSearchMode && score === total && total > 0;
+
+  // Build score pips
+  let scorePips = '';
+  if (isSearchMode && total > 1) {
+    scorePips = `<div class="score-bar">
+      ${Array.from({length: total}, (_,i) =>
+        `<div class="score-pip${i < score ? ' hit' : ''}"></div>`
+      ).join('')}
+      <span style="font-size:0.68rem;color:var(--inks);margin-left:4px">${score}/${total}</span>
+    </div>`;
+  }
+
+  // Show matched ingredient chips
+  let ingChips = '';
+  if (isSearchMode) {
+    ingChips = `<div class="ing-matched">
+      ${matchedIngs.map(i => `<span class="ing-chip hit">✓ ${i}</span>`).join('')}
+      ${ings.filter(i => !matchedIngs.includes(i)).map(i => `<span class="ing-chip miss">✗ ${i}</span>`).join('')}
+    </div>`;
+  }
+
   return `<div class="rcard" onclick="openDetail('${r.id}')">
     <div class="rcard-head">
       <span class="rcard-emoji">${r.emoji||'🍽️'}</span>
@@ -557,9 +724,14 @@ function miniCard(r, showBadge) {
       </div>
     </div>
     <div class="rcard-body">
-      ${(r.categories||[]).slice(0,2).map(c=>`<span class="cpill">${c}</span>`).join(' ')}
-      ${(r.collections||[]).slice(0,1).map(c=>`<span class="cpill">📁 ${c}</span>`).join('')}
-      ${showBadge?'<span class="mbadge">✓ Coincide</span>':''}
+      ${isSearchMode ? `
+        ${isFull ? `<span class="mbadge full">✓ Todos los ingredientes</span>` : `<span class="mbadge">✓ ${score} coincidencia${score>1?'s':''}</span>`}
+        ${scorePips}
+        ${ingChips}
+      ` : `
+        ${(r.categories||[]).slice(0,2).map(c=>`<span class="cpill">${c}</span>`).join(' ')}
+        ${(r.collections||[]).slice(0,1).map(c=>`<span class="cpill">📁 ${c}</span>`).join('')}
+      `}
     </div>
   </div>`;
 }
@@ -770,6 +942,407 @@ function showToast(msg) {
   setTimeout(()=>t.classList.remove('show'),3000);
 }
 function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+
+
+// ═══════════════════════════════════════════════════
+//  AI IMPORT — URL / IMAGE / TEXT
+// ═══════════════════════════════════════════════════
+
+// Queue: each item = { type:'url'|'image'|'text', label, data, status, result }
+let importQueue = [];
+let pendingImgBase64 = null;
+let extractedPreviews = []; // parsed recipes before saving
+let selectedPreviews = new Set();
+
+// ─── URL input ───────────────────────────────────
+function addUrl() {
+  const inp = document.getElementById('urlInput');
+  const url = inp.value.trim();
+  if (!url || !url.startsWith('http')) { showToast('⚠️ Introduce una URL válida'); return; }
+  const short = url.replace(/^https?:\/\/(www\.)?/, '').split('/')[0];
+  importQueue.push({ type:'url', label: short + ' — ' + url.substring(0,60), data: url, status:'pending' });
+  inp.value = '';
+  renderQueue();
+}
+
+// ─── Image input ─────────────────────────────────
+function handleImgDrop(e) {
+  e.preventDefault();
+  document.getElementById('imgDrop').classList.remove('over');
+  const f = e.dataTransfer.files[0]; if (f) loadImage(f);
+}
+function handleImgFile(e) { const f = e.target.files[0]; if (f) loadImage(f); }
+
+function loadImage(file) {
+  if (!file.type.startsWith('image/')) { showToast('⚠️ Solo imágenes'); return; }
+  if (file.size > 6 * 1024 * 1024) { showToast('⚠️ Máximo 5MB'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    pendingImgBase64 = e.target.result; // full data URL
+    const preview = document.getElementById('imgPreview');
+    preview.src = pendingImgBase64;
+    preview.style.display = 'block';
+    document.getElementById('imgDrop').style.display = 'none';
+    // Auto-add to queue
+    importQueue.push({ type:'image', label:'📷 ' + file.name, data: pendingImgBase64, status:'pending' });
+    renderQueue();
+  };
+  reader.readAsDataURL(file);
+}
+
+// ─── Text (Instagram/TikTok) ──────────────────────
+function addTextToQueue() {
+  const txt = document.getElementById('instaText').value.trim();
+  if (!txt || txt.length < 20) return;
+  importQueue.push({ type:'text', label:'📱 Texto pegado (' + txt.substring(0,40) + '…)', data: txt, status:'pending' });
+  document.getElementById('instaText').value = '';
+  renderQueue();
+}
+
+// Auto-add text when process is clicked
+function flushTextInput() {
+  const txt = document.getElementById('instaText').value.trim();
+  if (txt.length > 20) {
+    importQueue.push({ type:'text', label:'📱 Texto pegado', data: txt, status:'pending' });
+    document.getElementById('instaText').value = '';
+  }
+}
+
+function removeFromQueue(idx) {
+  importQueue.splice(idx, 1);
+  renderQueue();
+}
+
+function renderQueue() {
+  const wrap = document.getElementById('aiQueueWrap');
+  const btn = document.getElementById('btnProcess');
+  const list = document.getElementById('queueList');
+  const count = document.getElementById('queueCount');
+
+  if (importQueue.length === 0) {
+    wrap.style.display = 'none'; btn.style.display = 'none'; return;
+  }
+  wrap.style.display = 'block'; btn.style.display = 'block';
+  count.textContent = `(${importQueue.length} elemento${importQueue.length>1?'s':''})`;
+
+  const icons = { url:'🌐', image:'📷', text:'📱' };
+  list.innerHTML = importQueue.map((item, i) => `
+    <div class="queue-item">
+      <span class="qi-icon">${icons[item.type]}</span>
+      <span class="qi-label" title="${item.label}">${item.label}</span>
+      <span class="qi-status ${item.status}">
+        ${item.status==='pending'?'Pendiente':item.status==='processing'?'⏳ Procesando…':item.status==='done'?'✓ Listo':'✗ Error'}
+      </span>
+      ${item.status==='pending'?`<button onclick="removeFromQueue(${i})" style="background:none;border:none;color:#6A5A4A;cursor:pointer;font-size:0.9rem">✕</button>`:''}
+    </div>
+  `).join('');
+}
+
+// ─── PROCESS QUEUE ────────────────────────────────
+async function processQueue() {
+  flushTextInput();
+  const pending = importQueue.filter(item => item.status === 'pending');
+  if (!pending.length) { showToast('No hay elementos pendientes'); return; }
+
+  document.getElementById('btnProcess').disabled = true;
+  document.getElementById('btnProcess').textContent = '⏳ Procesando…';
+  extractedPreviews = [];
+  selectedPreviews = new Set();
+  document.getElementById('previewSection').style.display = 'none';
+
+  for (let i = 0; i < importQueue.length; i++) {
+    const item = importQueue[i];
+    if (item.status !== 'pending') continue;
+
+    item.status = 'processing';
+    renderQueue();
+
+    try {
+      let recipe = null;
+      if (item.type === 'url') recipe = await extractFromUrl(item.data);
+      else if (item.type === 'image') recipe = await extractFromImage(item.data);
+      else if (item.type === 'text') recipe = await extractFromText(item.data);
+
+      if (recipe) {
+        item.status = 'done';
+        recipe._queueLabel = item.label;
+        extractedPreviews.push(recipe);
+        selectedPreviews.add(extractedPreviews.length - 1);
+      } else {
+        item.status = 'error';
+      }
+    } catch(e) {
+      console.error(e);
+      item.status = 'error';
+    }
+    renderQueue();
+  }
+
+  document.getElementById('btnProcess').disabled = false;
+  document.getElementById('btnProcess').textContent = '✨ Procesar con IA →';
+
+  if (extractedPreviews.length > 0) {
+    renderPreviews();
+    document.getElementById('previewSection').style.display = 'block';
+    document.getElementById('previewSection').scrollIntoView({ behavior:'smooth', block:'start' });
+  } else {
+    showToast('⚠️ No se pudo extraer ninguna receta');
+  }
+}
+
+// ─── EXTRACT FROM URL ─────────────────────────────
+async function extractFromUrl(url) {
+  // Use Claude with web search to fetch and parse the URL
+  const prompt = `Accede a esta URL y extrae la receta completa: ${url}
+
+Devuelve SOLO un objeto JSON válido con esta estructura exacta (sin texto extra, sin markdown):
+{
+  "name": "Nombre de la receta",
+  "emoji": "emoji apropiado",
+  "categories": ["categoría"],
+  "collections": [],
+  "servings": "4",
+  "prepTime": "20",
+  "cookTime": "30",
+  "ingredients": "ingrediente 1\ningrediente 2\ningrediente 3",
+  "steps": "paso 1\npaso 2\npaso 3",
+  "notes": "notas opcionales",
+  "source": "${url}",
+  "imageUrl": "URL de la imagen principal de la receta si existe, sino cadena vacía"
+}
+
+Reglas:
+- ingredients y steps: cada elemento separado por \n (salto de línea literal en el JSON)
+- prepTime y cookTime: solo el número en minutos
+- imageUrl: la URL absoluta de la foto principal de la receta en esa web, si existe
+- Si no puedes acceder a la URL, intenta deducir la receta del nombre en la URL`;
+
+  const res = await callClaude(prompt, null, true); // with web search
+  return parseRecipeJSON(res, url);
+}
+
+// ─── EXTRACT FROM IMAGE ───────────────────────────
+async function extractFromImage(dataUrl) {
+  const base64 = dataUrl.split(',')[1];
+  const mediaType = dataUrl.split(';')[0].split(':')[1];
+
+  const prompt = `Analiza esta imagen. Puede ser una foto de una receta de un libro, cuaderno, captura de Instagram/TikTok, o cualquier fuente con una receta.
+
+Extrae la receta completa y devuelve SOLO un objeto JSON válido con esta estructura (sin texto extra, sin markdown):
+{
+  "name": "Nombre de la receta",
+  "emoji": "emoji apropiado",
+  "categories": ["categoría"],
+  "collections": [],
+  "servings": "4",
+  "prepTime": "20",
+  "cookTime": "30",
+  "ingredients": "ingrediente 1\ningrediente 2",
+  "steps": "paso 1\npaso 2",
+  "notes": "notas o consejos visibles en la imagen",
+  "source": "Foto de libro/receta",
+  "imageUrl": ""
+}
+
+- ingredients y steps: separados por \n
+- prepTime y cookTime: solo número en minutos (estima si no se ve)
+- Si hay varios platos en la imagen, extrae el más prominente`;
+
+  const res = await callClaudeWithImage(prompt, base64, mediaType);
+  return parseRecipeJSON(res, 'Foto');
+}
+
+// ─── EXTRACT FROM TEXT ────────────────────────────
+async function extractFromText(text) {
+  const prompt = `Extrae la receta de este texto (puede ser la descripción de un reel de Instagram, TikTok, o cualquier texto con una receta):
+
+---
+${text}
+---
+
+Devuelve SOLO un objeto JSON válido con esta estructura (sin texto extra, sin markdown):
+{
+  "name": "Nombre de la receta",
+  "emoji": "emoji apropiado",
+  "categories": ["categoría"],
+  "collections": [],
+  "servings": "4",
+  "prepTime": "20",
+  "cookTime": "30",
+  "ingredients": "ingrediente 1\ningrediente 2",
+  "steps": "paso 1\npaso 2",
+  "notes": "notas o hashtags relevantes",
+  "source": "Instagram/TikTok",
+  "imageUrl": ""
+}
+
+- ingredients y steps: separados por \n
+- Extrae e interpreta aunque el formato sea informal o con emojis`;
+
+  const res = await callClaude(prompt, null, false);
+  return parseRecipeJSON(res, 'Texto');
+}
+
+// ─── CLAUDE API CALLS ─────────────────────────────
+async function callClaude(prompt, systemMsg, useWebSearch) {
+  const body = {
+    model: 'claude-sonnet-4-20250514',
+    max_tokens: 2000,
+    messages: [{ role:'user', content: prompt }]
+  };
+  if (useWebSearch) {
+    body.tools = [{ type:'web_search_20250305', name:'web_search' }];
+  }
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  const data = await res.json();
+  // Extract text from content blocks
+  return data.content
+    .filter(b => b.type === 'text')
+    .map(b => b.text)
+    .join('');
+}
+
+async function callClaudeWithImage(prompt, base64, mediaType) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 2000,
+      messages: [{
+        role: 'user',
+        content: [
+          { type:'image', source:{ type:'base64', media_type: mediaType, data: base64 } },
+          { type:'text', text: prompt }
+        ]
+      }]
+    })
+  });
+  const data = await res.json();
+  return data.content?.find(b => b.type === 'text')?.text || '';
+}
+
+// ─── PARSE JSON from Claude response ──────────────
+function parseRecipeJSON(text, fallbackSource) {
+  if (!text) return null;
+  try {
+    // Strip markdown fences if present
+    const clean = text.replace(/```json
+?/g,'').replace(/```
+?/g,'').trim();
+    // Find JSON object in text
+    const match = clean.match(/\{[\s\S]*\}/);
+    if (!match) return null;
+    const obj = JSON.parse(match[0]);
+    if (!obj.name) return null;
+
+    // Normalize
+    obj.id = 'ai_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    obj.categories = Array.isArray(obj.categories) ? obj.categories : [obj.categories].filter(Boolean);
+    obj.collections = Array.isArray(obj.collections) ? obj.collections : [];
+    obj.favourite = false; obj.rating = 0;
+    obj.addedBy = userName;
+    obj.source = obj.source || fallbackSource;
+    if (!obj.emoji) obj.emoji = guessEmoji(obj.categories, obj.collections, '', obj.name, obj.ingredients || '');
+    return obj;
+  } catch(e) {
+    console.error('JSON parse error:', e, text.substring(0,300));
+    return null;
+  }
+}
+
+// ─── PREVIEW RENDERING ────────────────────────────
+function renderPreviews() {
+  const container = document.getElementById('previewCards');
+  container.innerHTML = extractedPreviews.map((r, i) => {
+    const isSelected = selectedPreviews.has(i);
+    const hasImg = r.imageUrl && r.imageUrl.startsWith('http');
+    const tt = (parseInt(r.prepTime)||0) + (parseInt(r.cookTime)||0);
+    const ingLines = (r.ingredients||'').split('\n').filter(Boolean).slice(0,4);
+
+    return `<div class="preview-card${isSelected?' selected':''}" id="pcard_${i}">
+      <div class="preview-card-img">
+        ${hasImg
+          ? `<img src="${r.imageUrl}" alt="${r.name}" onerror="this.parentElement.innerHTML='${r.emoji||'🍽️'}'"`+ ` style="width:100%;height:100%;object-fit:cover">`
+          : `<span style="font-size:3rem">${r.emoji||'🍽️'}</span>`
+        }
+      </div>
+      <div class="preview-card-body">
+        <div class="preview-card-name">${r.name}</div>
+        <div class="preview-card-meta">
+          ${tt?`⏱ ${tt}m · `:''}${(r.categories||[]).slice(0,2).join(', ')}
+          ${r.servings?` · 👥 ${r.servings}`:''}
+        </div>
+        <div class="preview-card-ings">${ingLines.map(l=>'• '+l).join('<br>')}</div>
+        <button class="btn-s" style="margin-top:0.7rem;font-size:0.78rem;padding:0.3rem 0.7rem" onclick="openPreviewDetail(${i})">Ver completa →</button>
+      </div>
+      <div class="preview-check${isSelected?' checked':''}" onclick="togglePreview(${i})">
+        ${isSelected?'✓':''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function togglePreview(i) {
+  if (selectedPreviews.has(i)) selectedPreviews.delete(i);
+  else selectedPreviews.add(i);
+  renderPreviews();
+}
+
+function selectAllPreviews() {
+  if (selectedPreviews.size === extractedPreviews.length) selectedPreviews.clear();
+  else extractedPreviews.forEach((_,i) => selectedPreviews.add(i));
+  renderPreviews();
+}
+
+function openPreviewDetail(i) {
+  const r = extractedPreviews[i];
+  // Temporarily add to recipes array for openDetail, then remove
+  const tempId = r.id;
+  recipes.push(r);
+  openDetail(tempId);
+  // Remove after modal closes — patch closeDetail
+  const origClose = window._origCloseDetail;
+  window._previewCleanup = () => {
+    recipes = recipes.filter(x => x.id !== tempId);
+    window._previewCleanup = null;
+  };
+}
+
+// Patch closeDetail to support preview cleanup
+const _origCloseDetail = closeDetail;
+window.closeDetail = function() {
+  _origCloseDetail();
+  if (window._previewCleanup) window._previewCleanup();
+};
+
+// ─── SAVE SELECTED ────────────────────────────────
+async function saveSelected() {
+  if (selectedPreviews.size === 0) { showToast('⚠️ Selecciona al menos una receta'); return; }
+  const toSave = [...selectedPreviews].map(i => extractedPreviews[i]);
+  recipes = [...recipes, ...toSave];
+  const ok = await saveToCloud();
+  if (ok) {
+    showToast(`✅ ${toSave.length} receta${toSave.length>1?'s':''} guardada${toSave.length>1?'s':''}`);
+    // Clear saved ones from preview
+    const savedIdxs = new Set([...selectedPreviews]);
+    extractedPreviews = extractedPreviews.filter((_,i) => !savedIdxs.has(i));
+    selectedPreviews.clear();
+    importQueue = importQueue.filter(item => item.status !== 'done');
+    renderQueue();
+    updateBadge();
+    populateFilters();
+    if (extractedPreviews.length === 0) {
+      document.getElementById('previewSection').style.display = 'none';
+    } else {
+      renderPreviews();
+    }
+  }
+}
 
 // ─── START ───────────────────────────────────────────
 window.addEventListener('load', init);
